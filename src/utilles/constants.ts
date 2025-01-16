@@ -14,7 +14,7 @@ const questionsNameTopic: string[] = data.quizzes.map(
     accesibility,
   ];
  const forceUpdate =  {force:()=>{}};
+ const questionAmounts = (num:number):number=> data.quizzes[num].questions.length;
 
 
-
-  export{questionsNameTopic,starterSvgPath,forceUpdate};
+  export{questionsNameTopic,starterSvgPath,forceUpdate,questionAmounts};

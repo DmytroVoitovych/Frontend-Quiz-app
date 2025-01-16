@@ -14,14 +14,19 @@ export const ListComponent = ({
   answer?: string;
 }) => {
   const [checked, setChecked] = useLocaleStorage("checked");
-  const [propsCame, setSignal,{update}] = useLocaleStorage("signal");
+  const [propsCame, setSignal,{update,remove}] = useLocaleStorage("signal");
+  
+  useEffect(()=>{
+    if(!propsCame){
+    remove(['checked']);
+    update(setChecked);}},[]);
 
   useEffect(() => {
      if(!answer) update(setSignal);
     if (answer) setSignal(answer);
     const index: number = items.findIndex((e) => e === checked);
-
-    if (checked && index !== -1) setIndex(index);
+     if (checked && index !== -1) setIndex(index);
+    
   }, [checked, items, setIndex, answer]);
 
   return (

@@ -11,7 +11,7 @@ background-position: right;
 background-size: cover;
 padding: 0 24px;
 
-&:has(input[type=submit]) .decorTopic{
+&:has([data-showdecor]) .decorTopic{
 display: flex;
 
 }
