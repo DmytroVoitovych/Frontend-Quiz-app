@@ -6,5 +6,9 @@ declare module "@emotion/react" {
     mobileBgImg: string;
     switcherMoonImg: string;
     switcherSunImg: string;
+    textColor: string;
+    textExtraColor: string;
+    listBg: string;
+    invertColor:string;
   }
 }

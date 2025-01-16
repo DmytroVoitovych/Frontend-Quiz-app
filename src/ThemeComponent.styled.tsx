@@ -4,6 +4,8 @@ import { colors } from "./stylesVariables";
 
 
 export const Header = styled.header`
+display: flex;
+align-items: center;
 padding: 16px 0px;
 `;
 
@@ -14,6 +16,7 @@ align-items: center;
 justify-content: flex-start;
 margin-left: auto;
 margin-right: 22px;
+padding: 4px;
 width: 32px;
 height: 20px;
 background-color: ${colors.purple};
