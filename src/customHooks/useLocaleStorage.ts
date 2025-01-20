@@ -1,19 +1,18 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-type StorageReturn = [string, Dispatch<SetStateAction<string>>,{
-  remove:(key: string[]) => false | void,
-  update:(callback: Dispatch<SetStateAction<string>>) => void, 
-}];
+type StorageReturn = [
+  string,
+  Dispatch<SetStateAction<string>>,
+  {
+    remove: (key: string[]) => false | void;
+    update: (callback: Dispatch<SetStateAction<string>>) => void;
+  }
+];
 
 export const useLocaleStorage = (
   key: string,
   initialValue?: string
-):StorageReturn => {
+): StorageReturn => {
   const [data, setData] = useState<string>(
     window?.localStorage?.getItem(key) || initialValue || ""
   );
@@ -21,14 +20,17 @@ export const useLocaleStorage = (
   useEffect(() => {
     if (!window?.localStorage || data === "") return;
     window.localStorage.setItem(key, data);
-     }, [data, key, initialValue]);
+  }, [data, key, initialValue]);
 
+  const remove = (key: string[]) =>
+    key.forEach(
+      (e) =>
+        window.localStorage.getItem(e) !== null && window.localStorage.removeItem(e)
+    );
+  const update = (callback: Dispatch<SetStateAction<string>>) =>
+    window.localStorage.getItem(key) !== null
+      ? callback(window.localStorage.getItem(key) as string)
+      : callback("");
 
-  const remove = (key:string[])=> key.forEach(e=> window.localStorage.getItem(e) !== null  && window.localStorage.removeItem(e)); 
-  const update = (callback: Dispatch<SetStateAction<string>>)=> 
-    window.localStorage.getItem(key) !== null?
-  callback(window.localStorage.getItem(key) as string):
-  callback(""); 
-
-  return [data, setData,{remove,update}];
+  return [data, setData, { remove, update }];
 };
