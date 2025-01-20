@@ -10,5 +10,8 @@ declare module "@emotion/react" {
     textExtraColor: string;
     listBg: string;
     invertColor:string;
+    tabletBgImg:string;
+    desctopBgImg:string;
+    alertColor:string;
   }
 }

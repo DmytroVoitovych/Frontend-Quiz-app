@@ -5,12 +5,12 @@ import { Child } from "./types";
 import { CheckBox, Header, Label } from "./ThemeComponent.styled";
 import { useLocaleStorage } from "./customHooks/useLocaleStorage";
 import { CurrentTopic } from "./components/CurrentTopic";
+import { STORAGE_THEME } from "./utilles/constants";
 
 
 const ThemeComponent = ({ children }: Child) => {
-  const [data, setData] = useLocaleStorage('theme','light');
+  const [data, setData] = useLocaleStorage(STORAGE_THEME,'light');
  
-
 
   return(
     <ThemeProvider theme={theme[data as 'light' | 'dark']}>

@@ -3,8 +3,11 @@ import { KeyList } from "../types";
 import { ListComponent } from "./ListComponent";
 import { useLocaleStorage } from "../customHooks/useLocaleStorage";
 import { AlertSpan, Form } from "./FormComponent.styled";
-
-
+import {
+  STORAGE_ANSWERS,
+  STORAGE_RESULT,
+  STORAGE_TOPIC,
+} from "../utilles/constants";
 
 export const FormComponent: React.FC<KeyList> = ({
   topics,
@@ -13,56 +16,61 @@ export const FormComponent: React.FC<KeyList> = ({
   setShow,
   answer,
   children,
-  
 }) => {
-  const [,setResult] = useLocaleStorage('result','0');
-  const [topicIndex, setTopicIndex] = useLocaleStorage("topic", "");
-  const [isSubmited,setSubmit] = useState(false);
-  const [alert,setAlert] = useState(false);
-  const [answersIndex, setAnswersIndex,{update,remove}] = useLocaleStorage(
-    "answers",
+  const [, setResult] = useLocaleStorage(STORAGE_RESULT, "0");
+  const [topicIndex, setTopicIndex] = useLocaleStorage(STORAGE_TOPIC, "");
+  const [isSubmited, setSubmit] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [answersIndex, setAnswersIndex, { update, remove }] = useLocaleStorage(
+    STORAGE_ANSWERS,
     ""
   );
-  
-  const handleSubmit = async (formData:FormData)=>{
-     if(!answersIndex)setAlert(true);
-    
-    if(answersIndex){ 
-      console.log('an',answersIndex);
+
+  const handleSubmit = async (formData: FormData) => {
+    if (!answersIndex) setAlert(true);
+
+    if (answersIndex) {
       setSubmit(true);
-     setShow('show');
-     setAnswersIndex('');
-    if(formData.get(topics[+answersIndex]) === answer){
-     setResult((prev)=> String(+prev + 1));
+      setShow("show");
+      setAnswersIndex("");
+      if (formData.get(topics[+answersIndex]) === answer) {
+        setResult((prev) => String(+prev + 1));
+      }
     }
-   }
- };
-  
+  };
+
   const setIndex = (index: number) =>
     svg ? setTopicIndex(index.toString()) : setAnswersIndex(index.toString());
 
-  useEffect(()=>{
-    if(!isSubmited){
-    remove(['answers']);
-    update(setAnswersIndex);}},[]);
+  useEffect(() => {
+    if (!isSubmited) {
+      remove([STORAGE_ANSWERS]);
+      update(setAnswersIndex);
+    }
+  }, []);
 
   useEffect(() => {
-    
     setQuize(!isNaN(parseInt(topicIndex)));
-    console.log(answersIndex,'next',children?.props.show);
-  if(children?.props.show === 'show'){setSubmit(false);setAnswersIndex('');}  
-  if(answersIndex) setAlert(false);
-  console.log(answersIndex,'eff');
-  }, [topicIndex,setQuize,children,answersIndex,setAnswersIndex]);
+
+    if (children?.props.show === "show") {
+      setSubmit(false);
+      setAnswersIndex("");
+    }
+    if (answersIndex) setAlert(false);
+  }, [topicIndex, setQuize, children, answersIndex, setAnswersIndex]);
 
   return (
     <>
-    <Form action={handleSubmit}>
-     <ListComponent  setIndex={setIndex} items={topics} svg={svg}  {...(isSubmited?{answer} : {})}
-      />
-      {children}
-    </Form>
-   {alert && <AlertSpan id="emptyAlert">Please select an answer</AlertSpan>}
+      <Form action={handleSubmit}>
+        <ListComponent
+          setIndex={setIndex}
+          items={topics}
+          svg={svg}
+          {...(isSubmited ? { answer } : {})}
+        />
+        {children}
+      </Form>
+      {alert && <AlertSpan id="emptyAlert">Please select an answer</AlertSpan>}
     </>
   );
 };

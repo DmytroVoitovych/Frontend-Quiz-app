@@ -4,45 +4,58 @@ import { useLocaleStorage } from "../customHooks/useLocaleStorage";
 import React, { useEffect, useState } from "react";
 import QuestionBlockComponent from "./QuestionBlockComponent";
 import {
-  forceUpdate,
   questionAmounts,
   questionsNameTopic,
   starterSvgPath,
+  STORAGE_ANSWERS,
+  STORAGE_CHECKED,
+  STORAGE_QUESTION,
+  STORAGE_SCORE,
+  STORAGE_SHOW,
+  STORAGE_SIGNAL,
+  STORAGE_THEME,
+  STORAGE_TOPIC,
 } from "../utilles/constants";
 import TopBlock from "./TopBlock";
 import ResultComponent from "./ResultComponent";
 import ConditionalButton from "./ConditionalButton";
+import { DataGetter } from "../types";
+import { clearStorageWithException } from "../utilles/clearStorageWithException";
 
-type QuestionKeys = "question" | "options" | "answer";
-const getData = (
-  topic: number,
-  qsNum: number,
-  key: QuestionKeys
-): string | string[] => data.quizzes[topic].questions[qsNum][key];
+const getData: DataGetter = (topic, qsNum, key) =>
+  data.quizzes[topic].questions[qsNum][key];
 
 const StarterComponent = () => {
-  const [topic, setData, { update, remove }] = useLocaleStorage("topic");
+  const [topic, setData, { update, remove }] = useLocaleStorage(STORAGE_TOPIC);
   const [isQuizStarted, setQuizState] = useState(false);
-  const [questionNumber, setNumber] = useLocaleStorage("question", "0");
-  const [show, setShow] = useLocaleStorage("show");
-  const [finish, showFinish] = useLocaleStorage("score");
+  const [questionNumber, setNumber] = useLocaleStorage(STORAGE_QUESTION, "0");
+  const [show, setShow] = useLocaleStorage(STORAGE_SHOW);
+  const [finish, showFinish] = useLocaleStorage(STORAGE_SCORE);
 
   const question = getData(+topic, +questionNumber, "question") as string;
   const questionOptions = getData(+topic, +questionNumber, "options") as string[];
   const answer = getData(+topic, +questionNumber, "answer");
 
-  const playAgain = ()=> {
-  showFinish(''); 
-const removeList:string[] = [];
-const len = window.localStorage.length;
+  const playAgain = () => {
+    setNumber("");
+    showFinish("");
+    setShow("");
+    setData("");
 
-for (let index = 0; index < len; index++) {
-    if(window.localStorage.key(index) !== 'theme')
-    removeList.push(window.localStorage.key(index) as string);    
-}
+    clearStorageWithException(STORAGE_THEME, remove);
+  };
 
- if(removeList.length)  remove(removeList);
+  const runFinish = () => {
+   showFinish("finish");
+   setQuizState(false);
+   };
 
+  const passNextQuestion = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    if ((e.target as HTMLInputElement).type === "button") {
+      remove([STORAGE_CHECKED, STORAGE_SIGNAL, STORAGE_ANSWERS, STORAGE_SHOW]);
+      setShow("");
+      setNumber((prev) => String(parseInt(prev) + 1));
+    }
   };
 
   const nextQuestionBySignal = (
@@ -50,21 +63,13 @@ for (let index = 0; index < len; index++) {
   ) => {
     e.stopPropagation();
     e.preventDefault();
-    if (questionAmounts(+topic) === +questionNumber + 1) {
-      showFinish("finish");
-      setQuizState(false);
-      return;
-    }
-    if ((e.target as HTMLInputElement).type === "button") {
-      remove(["checked", "signal", "answers", "show"]);
-      setShow("");
-      setNumber((prev) => String(parseInt(prev) + 1));
-    }
+    if (questionAmounts(+topic) === +questionNumber + 1) return runFinish();
+    passNextQuestion(e);
   };
 
   useEffect(() => {
     update(setData);
-    forceUpdate.force();
+    setNumber(questionNumber || "0");
   }, [isQuizStarted]);
 
   return (
@@ -94,15 +99,15 @@ for (let index = 0; index < len; index++) {
         </FormComponent>
       ) : (
         <>
-        <ResultComponent numOfAllQuestion={questionAmounts(+topic)} />
-        <ConditionalButton
-         isQuizStarted={isQuizStarted}
-         show={show}
-         nextQuestionBySignal={nextQuestionBySignal}
-        finish={finish}
-        playAgain={playAgain}
-      />
-      </>
+          <ResultComponent numOfAllQuestion={questionAmounts(+topic)} />
+          <ConditionalButton
+            isQuizStarted={isQuizStarted}
+            show={show}
+            nextQuestionBySignal={nextQuestionBySignal}
+            finish={finish}
+            playAgain={playAgain}
+          />
+        </>
       )}
     </>
   );

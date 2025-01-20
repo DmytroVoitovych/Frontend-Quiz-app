@@ -1,9 +1,10 @@
 import { useLocaleStorage } from "../customHooks/useLocaleStorage";
+import { STORAGE_RESULT } from "../utilles/constants";
 import { CurrentTopic } from "./CurrentTopic";
 import { ScoreP, SectionResult, SpanScore } from "./ResultComponent.styled";
 
 const ResultComponent = ({numOfAllQuestion}:{numOfAllQuestion:number}) => {
-  const [result] = useLocaleStorage("result");
+  const [result] = useLocaleStorage(STORAGE_RESULT);
 
   return (
     <SectionResult>

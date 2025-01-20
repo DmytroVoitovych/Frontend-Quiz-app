@@ -25,6 +25,15 @@ interface KeyList {
   children?: ReactElement<{ show: "show" | "" }>;
 }
 
-type CurrentList = "starter" | "quiz" | "result";
+interface ListInner {
+  items: string[];
+  svg?: string[];
+  setIndex: (index: number) => void;
+  answer?: string;
+};
 
-export type { Child, Children, KeyList, CurrentList, ConditionalButtonProps };
+type CurrentList = "starter" | "quiz" | "result";
+type QuestionKeys = "question" | "options" | "answer";
+type DataGetter = (topic: number, qsNum: number, key: QuestionKeys) => string | string[];
+
+export type { Child, Children, KeyList, CurrentList, ConditionalButtonProps,ListInner,DataGetter};

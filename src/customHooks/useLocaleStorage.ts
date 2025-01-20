@@ -21,7 +21,7 @@ export const useLocaleStorage = (
   useEffect(() => {
     if (!window?.localStorage || data === "") return;
     window.localStorage.setItem(key, data);
-  }, [data, key, initialValue]);
+     }, [data, key, initialValue]);
 
 
   const remove = (key:string[])=> key.forEach(e=> window.localStorage.getItem(e) !== null  && window.localStorage.removeItem(e)); 

@@ -1,3 +1,4 @@
+
 import { InputRange, QuestionH, QuestionSection, QuestionSpan } from "./QuestionBlockComponent.styled";
 
 
@@ -9,7 +10,8 @@ return (
 <QuestionSection>
   <QuestionSpan>Question {num} of {numOfAllQuestion}</QuestionSpan>
   <QuestionH>{question}</QuestionH>
-   <InputRange tabIndex={-1} num={num as number} id="questionProgress" name="questionProgress" step="1" min="0" max={numOfAllQuestion} defaultValue={num} type="range" />
+   <InputRange tabIndex={-1} num={+num as number}
+    id="questionProgress" name="questionProgress" step="1" min="0" max={numOfAllQuestion} value={+num} readOnly={true} type="range" />
 </QuestionSection>
 );
 
